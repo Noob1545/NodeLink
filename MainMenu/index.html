@@ -1,0 +1,72 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeLink - anasayfa</title>
+</head>
+<body>
+    <div id="MainDiv">
+        <h1>NodeLink</h1>
+        <input type="url" id="input" placeholder="kısaltmak istediğiniz url yi yazın.">
+        <br>
+        <br>
+        <button id="sendButton">Link i oluştur ve Kopyala</button>
+    </div>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #MainDiv{
+            text-align: center;
+        }
+        #input{
+            width: 225px;
+        }
+        button{
+            cursor: pointer;
+        }
+        #copyLinkButton{
+            display: none;
+        }
+    </style>
+    <script>
+        document.getElementById("sendButton").onclick = function(){
+            const url = document.getElementById("input").value
+            const htmlCode = `${url}`
+            const blob = new Blob([htmlCode],{type: 'text/plain'})
+
+            const reader = new FileReader()
+            reader.onload = function(){
+                const url = this.result
+                navigator.clipboard.writeText("http:localhost:3000/link="+url.split('base64,')[1])
+                navigator.clipboard.writeText("https://nodelink.onrender.com/link="+url.split('base64,')[1])
+                .then(function(){
+                    alert('link kopyalandı!')
+                })
+                .catch(function(){
+                    alert('link kopyalanamadı!')
+                })
+            }
+            reader.readAsDataURL(blob)
+        }
+        setInterval(function(){
+            const inputValue = document.getElementById("input").value
+            try{
+                const url = new URL(inputValue)
+                if((inputValue.startsWith("https://") || inputValue.startsWith("http://")) && (url.hostname.split(".")[url.hostname.split(".").length - 1] == "com" || url.hostname.split(".")[url.hostname.split(".").length - 1] == "net" || url.hostname.split(".")[url.hostname.split(".").length - 1] == "org") && url.hostname.split(".")[0].length >= 2){
+                document.getElementById("sendButton").disabled = false
+                document.getElementById("sendButton").style.cursor = "pointer"
+            }
+            else{
+                document.getElementById("sendButton").disabled = true
+                document.getElementById("sendButton").style.cursor = "not-allowed"
+            }
+            }
+            catch{
+                document.getElementById("sendButton").disabled = true
+                document.getElementById("sendButton").style.cursor = "not-allowed"
+            }
+        })
+    </script>
+</body>
+</html>

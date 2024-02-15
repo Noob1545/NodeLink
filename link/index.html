@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeLink - link</title>
+</head>
+<body>
+    <script>
+        const url = new URL(window.location.href)
+        const dataURLCode = url.pathname.split('/link=')[1]
+        async function data(){
+            try{
+                const fetchData = await fetch("data:text/plain;base64,"+dataURLCode)
+                const response = await fetchData.text()
+                window.location.href = response
+            }
+            catch{
+                document.body.style = "font-family: Arial;"
+                document.body.innerHTML = `
+                    <div style='text-align: center;'>
+                        <h1>Link Hatası</h1>
+                        <h3>girdiğiniz URL de link e ulaşılamadı, linkinizi kontrol edin veya <a href='http://localhost:3000'>yeniden bir URL oluşturun</a></h3>
+                    </div>
+                `
+            }
+        }
+        data()
+    </script>
+</body>
+</html>
